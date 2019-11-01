@@ -1,5 +1,4 @@
 var table = document.getElementById('result');
-var idInput = document.getElementById('id');
 var titleInput = document.getElementById('title');
 var descrInput = document.getElementById('description');
 var ttmInput = document.getElementById('ttm');
@@ -10,16 +9,15 @@ var inprogInput = document.getElementById('inprog');
 var compldInput = document.getElementById('compld');
 
 class Topic {
-    constructor (id, title, description, ttm, timespent, source, sld, inprog, compld) {
-    this.id = id;
+    constructor (title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate) {
     this.title = title;
     this.description = description;
-    this.ttm = ttm;
+    this.timetomaster = timetomaster;
     this.timespent = timespent;
     this.source = source;
-    this.sld = sld;
-    this.inprog = inprog;
-    this.compld = compld;
+    this.startlearningdate = startlearningdate;
+    this.inprogress = inprogress;
+    this.completiondate = completiondate;
     }
 }
 
@@ -31,25 +29,33 @@ function listAll(){
         console.dir(data);
         $('#result').empty();
         for (let t of data) {
-            $('#result').append(`<tr><td>${t.id}</td><td>${t.title}</td><td>${t.description}</td><td>${t.ttm}</td><td>${t.timespent}</td><td>${t.source}</td><td>${t.sld}</td><td>${t.inprog}</td><td>${t.compld}</td><td><button onclick="remove('${t.id}')">Delete</button></td></tr>`)
+            $('#result').append(`<tr><td>${t.title}</td><td>${t.description}</td><td>${t.timetomaster}</td><td>${t.timespent}</td><td>${t.source}</td><td>${t.startlearningdate}</td><td>${t.inprogress}</td><td>${t.completiondate}</td><td><button onclick="remove('${t.id}')">Delete</button></td></tr>`)
         }
     })
 }
 
 function createTopic () {
-    let idT = idInput.value;
     let titleT = titleInput.value;
     let descrT = descrInput.value;
     let ttmT = ttmInput.value;
+        if (!ttmT) {
+            ttmT = undefined;
+        }
     let timesT = tsInput.value;
+        if (!timesT) {
+            timesT = undefined;
+        }
     let sourceT = srcInput.value;
     let sldT = sldInput.value;
-    let inprogT = $('input[type=checkbox]').is(':checked') ? "In Progress" : "Completed";
+        if (!sldT) {
+            sldT = undefined;
+        }
+    let inprogT = $('input[type=checkbox]').is(':checked') ? "true" : "false";
     let compldT = compldInput.value;
     
-    var topic = new Topic (idT, titleT, descrT, ttmT, timesT, sourceT, sldT, inprogT, compldT);
+    var topic = new Topic (titleT, descrT, ttmT, timesT, sourceT, sldT, inprogT, compldT);
 
-    localStorage.setItem(idT, [titleT, descrT, ttmT, timesT, sourceT, sldT, inprogT, compldT])
+    //localStorage.setItem(idT, [titleT, descrT, ttmT, timesT, sourceT, sldT, inprogT, compldT])
 
     arrTopic.push(topic);
 
@@ -85,7 +91,6 @@ function remove (id) {
 }
 
 function emptyForm(){
-    document.getElementById('id').value = "";
     document.getElementById('title').value = "";
     document.getElementById('description').value = "";
     document.getElementById('ttm').value = "";
