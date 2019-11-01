@@ -1,6 +1,37 @@
 var express = require('express');
 var router = express.Router();
-var fs = require('fs');
+var topics = require('./topicfunction')
+
+router.route('/')
+  .get(function(req, res, next) {
+  topics.getAllTopics((results) => {
+    res.json(results)
+  });
+})
+  .post(function(req, res) {
+  topics.createTopic(req, function(results) {
+    res.send(results);
+  });
+});
+
+router.route('/:id')
+  .get(function(req, res) {
+   topics.getSingleTopic(req, function(results){
+     res.json(results);
+   })
+  })
+  .delete(function(req, res) {
+    topics.deleteTopic(req, function(results){
+      res.send(results);
+    })
+  })
+  .put(function(req, res) {
+    topics.updateTopic(req, function(results){
+      res.send(results);
+    })
+  });
+
+/* var fs = require('fs');
 
 var topics = []; 
 
@@ -48,5 +79,5 @@ fs.readFile("topics.json", (err,data)=>{
   topics=JSON.parse(data);
   //console.dir(topics);
 })
-
+ */
 module.exports = router;
