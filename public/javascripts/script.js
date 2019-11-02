@@ -94,7 +94,13 @@ function remove (id) {
 });
 }
 
+//Ei hae päivämääriä, eikä checkboxin value - tee nätimpi
 function update(id, title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate) {
+    
+    if (document.contains(document.getElementById('updateForm'))){
+        document.getElementById('updateForm').remove();
+    } 
+
     //new form elements
     let body = document.querySelector('body');
     let updateDiv = document.createElement('div');
@@ -109,7 +115,7 @@ function update(id, title, description, timetomaster, timespent, source, startle
     let saveBtn = document.createElement('input');
 
     //element attributes
-    updateDiv.setAttribute('id', 'formdiv');
+    updateDiv.setAttribute('id', 'updateForm');
 
     titleInput.setAttribute('type', 'text');
     titleInput.setAttribute('name', 'uTitle');
@@ -156,7 +162,7 @@ function update(id, title, description, timetomaster, timespent, source, startle
     saveBtn.setAttribute('value', 'Save');
     saveBtn.setAttribute('onclick', `updateTopic('${id}')`);
 
-    //appends
+    //append elements to body
     updateDiv.appendChild(titleInput);
     updateDiv.appendChild(descInput);
     updateDiv.appendChild(ttmInput);
@@ -172,7 +178,6 @@ function update(id, title, description, timetomaster, timespent, source, startle
 }
 
 function updateTopic(id) {
-    //tyhjennä lomake jos on jo siinä
     let title = document.getElementById('uTitle').value;
     let description = document.getElementById('uDescription').value;
     let timetomaster = document.getElementById('uTtm').value;
@@ -202,7 +207,7 @@ function updateTopic(id) {
     $.ajax(settings).done(function () {
         //console.log(updatedTopic);
         listAll();
-        //poista lomake kun painaa save
+        document.getElementById('updateForm').remove();
     });
 }
 
