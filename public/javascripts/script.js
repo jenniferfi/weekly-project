@@ -29,33 +29,38 @@ function listAll(){
         console.dir(data);
         $('#result').empty();
         for (let t of data) {
-            $('#result').append(`<tr><td>${t.title}</td><td>${t.description}</td><td>${t.timetomaster}</td><td>${t.timespent}</td><td>${t.source}</td><td>${t.startlearningdate}</td><td>${t.inprogress}</td><td>${t.completiondate}</td><td><button onclick="remove('${t.id}')">Delete</button></td></tr>`)
+            $('#result').append(`<tr>
+            <td>${t.title}</td>
+            <td>${t.description}</td>
+            <td>${t.timetomaster}</td>
+            <td>${t.timespent}</td>
+            <td>${t.source}</td>
+            <td>${t.startlearningdate}</td>
+            <td>${t.inprogress}</td>
+            <td>${t.completiondate}</td>
+            <td><button onclick="remove('${t.id}')">Delete</button>
+            <button onclick="update('${t.id}', '${t.title}','${t.description}', '${t.timetomaster}', '${t.timespent}', '${t.source}', '${t.startlearningdate}', '${t.inprogress}', '${t.completiondate}')">Edit</button></td>
+            </tr>`)
         }
     })
 }
 
 function createTopic () {
-    let titleT = titleInput.value;
-    let descrT = descrInput.value;
-    let ttmT = ttmInput.value;
-        if (!ttmT) {
-            ttmT = undefined;
-        }
-    let timesT = tsInput.value;
-        if (!timesT) {
-            timesT = undefined;
-        }
-    let sourceT = srcInput.value;
-    let sldT = sldInput.value;
-        if (!sldT) {
-            sldT = undefined;
-        }
-    let inprogT = $('input[type=checkbox]').is(':checked') ? "true" : "false";
-    let compldT = compldInput.value;
+    let titleValue = titleInput.value;
+    let descrValue = descrInput.value;
+    let ttmValue = ttmInput.value;
+        if (!ttmValue) { ttmValue = undefined;}
+    let timesValue = tsInput.value;
+        if (!timesValue) { timesValue = undefined;}
+    let sourceValue = srcInput.value;
+    let sldValue = sldInput.value;
+        if (!sldValue) { sldValue = undefined;}
+    let inprogValue = $('input[type=checkbox]').is(':checked') ? "true" : "false";
+    let compldValue = compldInput.value;
     
-    var topic = new Topic (titleT, descrT, ttmT, timesT, sourceT, sldT, inprogT, compldT);
+    var topic = new Topic (titleValue, descrValue, ttmValue, timesValue, sourceValue, sldValue, inprogValue, compldValue);
 
-    //localStorage.setItem(idT, [titleT, descrT, ttmT, timesT, sourceT, sldT, inprogT, compldT])
+    //localStorage.setItem(id, [titleValue, descrValue, ttmValue, timesValue, sourceValue, sldValue, inprogValue, compldValue])
 
     arrTopic.push(topic);
 
@@ -87,7 +92,118 @@ function remove (id) {
         listAll();
     }
 });
+}
 
+function update(id, title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate) {
+    //new form elements
+    let body = document.querySelector('body');
+    let updateDiv = document.createElement('div');
+    let titleInput = document.createElement('input');
+    let descInput = document.createElement('input');
+    let ttmInput = document.createElement('input');
+    let tsInput = document.createElement('input');
+    let sourceInput = document.createElement('input');
+    let sldInput = document.createElement('input');
+    let inprogInput = document.createElement('input');
+    let compldInput = document.createElement('input');
+    let saveBtn = document.createElement('input');
+
+    //element attributes
+    updateDiv.setAttribute('id', 'formdiv');
+
+    titleInput.setAttribute('type', 'text');
+    titleInput.setAttribute('name', 'uTitle');
+    titleInput.setAttribute('id', 'uTitle');
+    titleInput.setAttribute('value', title);
+
+    descInput.setAttribute('type', 'text');
+    descInput.setAttribute('name', 'description');
+    descInput.setAttribute('id', 'uDescription');
+    descInput.setAttribute('value', description);
+
+    ttmInput.setAttribute('type', 'number');
+    ttmInput.setAttribute('name', 'ttm');
+    ttmInput.setAttribute('id', 'uTtm');
+    ttmInput.setAttribute('value', timetomaster);
+
+    tsInput.setAttribute('type', 'number');
+    tsInput.setAttribute('name', 'timespent');
+    tsInput.setAttribute('id', 'uTimespent');
+    tsInput.setAttribute('value', timespent);
+
+    sourceInput.setAttribute('type', 'text');
+    sourceInput.setAttribute('name', 'source');
+    sourceInput.setAttribute('id', 'uSource');
+    sourceInput.setAttribute('value', source);
+
+    sldInput.setAttribute('type', 'date');
+    sldInput.setAttribute('name', 'sld');
+    sldInput.setAttribute('id', 'uSld');
+    sldInput.setAttribute('value', startlearningdate);
+
+    inprogInput.setAttribute('type', 'checkbox');
+    inprogInput.setAttribute('name', 'inprog');
+    inprogInput.setAttribute('id', 'uInprog');
+    inprogInput.setAttribute('value', inprogress);
+
+    compldInput.setAttribute('type', 'date');
+    compldInput.setAttribute('name', 'compld');
+    compldInput.setAttribute('id', 'uCompld');
+    compldInput.setAttribute('value', completiondate);
+
+    saveBtn.setAttribute('type', 'submit');
+    saveBtn.setAttribute('id', "btn_save");
+    saveBtn.setAttribute('value', 'Save');
+    saveBtn.setAttribute('onclick', `updateTopic('${id}')`);
+
+    //appends
+    updateDiv.appendChild(titleInput);
+    updateDiv.appendChild(descInput);
+    updateDiv.appendChild(ttmInput);
+    updateDiv.appendChild(tsInput);
+    updateDiv.appendChild(sourceInput);
+    updateDiv.appendChild(sldInput);
+    updateDiv.appendChild(inprogInput);
+    updateDiv.appendChild(compldInput);
+    updateDiv.appendChild(saveBtn);
+
+    body.appendChild(updateDiv);
+
+}
+
+function updateTopic(id) {
+    //tyhjennä lomake jos on jo siinä
+    let title = document.getElementById('uTitle').value;
+    let description = document.getElementById('uDescription').value;
+    let timetomaster = document.getElementById('uTtm').value;
+        if (!timetomaster) { timetomaster = undefined;}
+    let timespent = document.getElementById('uTimespent').value;
+        if (!timespent) { timespent = undefined;}
+    let source = document.getElementById('uSource').value;
+    let startlearningdate = document.getElementById('uSld').value;
+        if (!startlearningdate) { startlearningdate = undefined;}
+    let inprogress = $('input[type=checkbox]').is(':checked') ? "true" : "false";
+    let completiondate = document.getElementById('uCompld').value;
+
+    let updatedTopic = {title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate};
+
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": `http://localhost:3000/api/topics/${id}`,
+        "method": "PUT",
+        "headers": {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        "data": JSON.stringify(updatedTopic)
+    }
+
+    $.ajax(settings).done(function () {
+        //console.log(updatedTopic);
+        listAll();
+        //poista lomake kun painaa save
+    });
 }
 
 function emptyForm(){
