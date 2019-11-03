@@ -9,13 +9,26 @@ h1{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
 }
-#box1{
+#box1 {
   width: 90%;
   margin: 30px auto;
   background-image: linear-gradient(#dcffdf, #049c8a88);
   padding: 20px 30px;
   font-weight: 500;
 }
+#updateForm{
+  max-width: 600px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  background-color: #049c8a88;
+  padding: 20px 30px;
+  font-weight: 500;
+  width: 90%;
+  margin: 30px auto;
+}
+
 .col-25 {
   float: left;
   width: 25%;
@@ -34,9 +47,10 @@ h1{
   display: table;
   clear: both;
 }
-#table {
+table {
   width: 95%;
   margin: 10px auto;
+  border-collapse: collapse;
 }
 
 /* th {
@@ -48,7 +62,7 @@ th.th-10 {
   width: 10%;
 }
 th.th-15 {
-  width:15%;
+  width:20%;
   text-overflow: ellipsis;
 }
 thead {
@@ -59,11 +73,12 @@ thead > tr > th {
   font-weight: 500;
   font-size: 1em;
   padding: 5px;
+  text-align: left;
 }
 tbody > tr > td {
   font-size: 0.9em;
   font-weight: 400;
-  padding: 5px;
+  padding: 5px 10px;
 }
 tr:nth-of-type(2n) {
   background: #4abd9591;
@@ -90,8 +105,8 @@ input[type=text], input[type=number], input[type=date], select, textarea {
     height: 20px;
     width: 20px;
   }  
-  input[type=submit] {
-    margin: 10px 0 0 0;
+  input[type=submit], input[type=button] {
+    margin: 10px 5px 0 0;
     background-color: #008878;
     color: white;
     padding: 12px 20px;
@@ -102,14 +117,16 @@ input[type=text], input[type=number], input[type=date], select, textarea {
     font-size: 1em;
   }
 
-  input[type=submit]:hover {
+  input[type=submit]:hover, input[type=button]:hover {
     background-image: linear-gradient(#098, #004e45);
   }
   
-  
+  .blur {
+    filter: blur(10px);
+  }
   
   @media screen and (max-width: 700px) {
-    .col-25, .col-75, input[type=submit] {
+    .col-25, .col-75 {
       width: 100%;
       margin-top: 0;
     }

@@ -9,26 +9,35 @@ var inprogInput = document.getElementById('inprog');
 var compldInput = document.getElementById('compld');
 
 class Topic {
-    constructor (title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate) {
-    this.title = title;
-    this.description = description;
-    this.timetomaster = timetomaster;
-    this.timespent = timespent;
-    this.source = source;
-    this.startlearningdate = startlearningdate;
-    this.inprogress = inprogress;
-    this.completiondate = completiondate;
+    constructor(title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate) {
+        this.title = title;
+        this.description = description;
+        this.timetomaster = timetomaster;
+        this.timespent = timespent;
+        this.source = source;
+        this.startlearningdate = startlearningdate;
+        this.inprogress = inprogress;
+        this.completiondate = completiondate;
     }
 }
 
 var arrTopic = [];
 
+//Listaa päivämäärät parempaan muotoon
 $(document).ready(listAll)
-function listAll(){
-    $.getJSON('/api/topics', function (data){
-        console.dir(data);
+function listAll() {
+    $.getJSON('/api/topics', function (data) {
+        //console.dir(data);
+
         $('#result').empty();
         for (let t of data) {
+            let inprog ='';
+            if (t.inprogress === true) {
+                inprog = 'In Progress'
+            } else {
+                inprog = 'Completed'
+            };
+
             $('#result').append(`<tr>
             <td>${t.title}</td>
             <td>${t.description}</td>
@@ -36,7 +45,7 @@ function listAll(){
             <td>${t.timespent}</td>
             <td>${t.source}</td>
             <td>${t.startlearningdate}</td>
-            <td>${t.inprogress}</td>
+            <td>${inprog}</td>
             <td>${t.completiondate}</td>
             <td><button onclick="remove('${t.id}')">Delete</button>
             <button onclick="update('${t.id}', '${t.title}','${t.description}', '${t.timetomaster}', '${t.timespent}', '${t.source}', '${t.startlearningdate}', '${t.inprogress}', '${t.completiondate}')">Edit</button></td>
@@ -45,20 +54,21 @@ function listAll(){
     })
 }
 
-function createTopic () {
+function createTopic() {
+    //MIKSI sldValue ei voi olla tyhjä, mutta compldValue voi olla tyhjä???
     let titleValue = titleInput.value;
     let descrValue = descrInput.value;
     let ttmValue = ttmInput.value;
-        if (!ttmValue) { ttmValue = undefined;}
+        if (!ttmValue) { ttmValue = undefined; }
     let timesValue = tsInput.value;
-        if (!timesValue) { timesValue = undefined;}
+        if (!timesValue) { timesValue = undefined; }
     let sourceValue = srcInput.value;
     let sldValue = sldInput.value;
-        if (!sldValue) { sldValue = undefined;}
+        if (!sldValue) { sldValue = undefined; }
     let inprogValue = $('input[type=checkbox]').is(':checked') ? "true" : "false";
     let compldValue = compldInput.value;
-    
-    var topic = new Topic (titleValue, descrValue, ttmValue, timesValue, sourceValue, sldValue, inprogValue, compldValue);
+
+    var topic = new Topic(titleValue, descrValue, ttmValue, timesValue, sourceValue, sldValue, inprogValue, compldValue);
 
     //localStorage.setItem(id, [titleValue, descrValue, ttmValue, timesValue, sourceValue, sldValue, inprogValue, compldValue])
 
@@ -79,118 +89,93 @@ function createTopic () {
     $.ajax(settings).done(function () {
         listAll();
     });
-emptyForm();
+    emptyForm();
 }
 
-function remove (id) {
+function remove(id) {
     //console.log(id);
     $.ajax({
-    url: `http://localhost:3000/api/topics/${id}`,
-    type: 'DELETE',
-    success: function(result) {
-        //console.dir(result);
-        listAll();
-    }
-});
+        url: `http://localhost:3000/api/topics/${id}`,
+        type: 'DELETE',
+        success: function (result) {
+            //console.dir(result);
+            listAll();
+        }
+    });
 }
 
 //Ei hae päivämääriä, eikä checkboxin value - tee nätimpi
 function update(id, title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate) {
-    
-    if (document.contains(document.getElementById('updateForm'))){
+
+    //removes form if there already is one
+    if (document.contains(document.getElementById('updateForm'))) {
         document.getElementById('updateForm').remove();
-    } 
+    }
 
-    //new form elements
+    //new form
+    let inprog ='';
+    if (inprogress == 'true') {inprog = 'checked'};
+    //date value muodossa: value="2017-06-01"
+    
     let body = document.querySelector('body');
-    let updateDiv = document.createElement('div');
-    let titleInput = document.createElement('input');
-    let descInput = document.createElement('input');
-    let ttmInput = document.createElement('input');
-    let tsInput = document.createElement('input');
-    let sourceInput = document.createElement('input');
-    let sldInput = document.createElement('input');
-    let inprogInput = document.createElement('input');
-    let compldInput = document.createElement('input');
-    let saveBtn = document.createElement('input');
+    
+    $(body).append(`
+    <div class="container" id="updateForm">
+    <h2>Update topic</h2>
+    <div class="row">
+        <div class="col-25"><label for="title">Title: </label></div>
+        <div class="col-75"><input id="uTitle" type="text" name="title" value="${title}" /></div>
+    </div>
+    <div class="row">
+        <div class="col-25"><label for="description">Description: </label></div>
+        <div class="col-75"><textarea id="uDescription" name="description" style="height:150px">${description}</textarea></div>
+    </div>
+    <div class="row">
+        <div class="col-25"><label for="ttm">Time to Master: </label></div>
+        <div class="col-75"><input id="uTtm" type="number" name="ttm" value="${timetomaster}" /></div>
+    </div>
+    <div class="row">
+        <div class="col-25"><label for="timespent">Time Spent: </label></div>
+         <div class="col-75"><input id="uTimespent" type="number" name="timespent" value="${timespent}" /></div>
+    </div>
+    <div class="row">
+        <div class="col-25"><label for="source">Source: </label></div>
+        <div class="col-75"><input id="uSource" type="text" name="source" value="${source}" /></div>
+    </div>
+    <div class="row">
+        <div class="col-25"><label for="sld">Start Learning Date: </label></div>
+        <div class="col-75"> <input id="uSld" type="date" name="sld" value="${startlearningdate}" /></div>
+    </div>
+    <div class="row">
+        <div class="col-25"><label for="inprog">In Progress:</label></div>
+        <div class="col-75"><input id="uInprog" type="checkbox" name="inprog" value="true" ${inprog} /></div>
+    </div>
+    <div class="row">
+        <div class="col-25"><label for="compld">Completion Date </label></div>
+        <div class="col-75"><input id="uCompld" type="date" name="compld" value=${completiondate} /></div>
+    </div>
+    <div class="row"><input type="submit" id="btn_save" onclick=updateTopic('${id}') value="Save"><input type="button" id="btn_cancel" onclick=cancel() value="Cancel"></div>
+</div>`)
 
-    //element attributes
-    updateDiv.setAttribute('id', 'updateForm');
-
-    titleInput.setAttribute('type', 'text');
-    titleInput.setAttribute('name', 'uTitle');
-    titleInput.setAttribute('id', 'uTitle');
-    titleInput.setAttribute('value', title);
-
-    descInput.setAttribute('type', 'text');
-    descInput.setAttribute('name', 'description');
-    descInput.setAttribute('id', 'uDescription');
-    descInput.setAttribute('value', description);
-
-    ttmInput.setAttribute('type', 'number');
-    ttmInput.setAttribute('name', 'ttm');
-    ttmInput.setAttribute('id', 'uTtm');
-    ttmInput.setAttribute('value', timetomaster);
-
-    tsInput.setAttribute('type', 'number');
-    tsInput.setAttribute('name', 'timespent');
-    tsInput.setAttribute('id', 'uTimespent');
-    tsInput.setAttribute('value', timespent);
-
-    sourceInput.setAttribute('type', 'text');
-    sourceInput.setAttribute('name', 'source');
-    sourceInput.setAttribute('id', 'uSource');
-    sourceInput.setAttribute('value', source);
-
-    sldInput.setAttribute('type', 'date');
-    sldInput.setAttribute('name', 'sld');
-    sldInput.setAttribute('id', 'uSld');
-    sldInput.setAttribute('value', startlearningdate);
-
-    inprogInput.setAttribute('type', 'checkbox');
-    inprogInput.setAttribute('name', 'inprog');
-    inprogInput.setAttribute('id', 'uInprog');
-    inprogInput.setAttribute('value', inprogress);
-
-    compldInput.setAttribute('type', 'date');
-    compldInput.setAttribute('name', 'compld');
-    compldInput.setAttribute('id', 'uCompld');
-    compldInput.setAttribute('value', completiondate);
-
-    saveBtn.setAttribute('type', 'submit');
-    saveBtn.setAttribute('id', "btn_save");
-    saveBtn.setAttribute('value', 'Save');
-    saveBtn.setAttribute('onclick', `updateTopic('${id}')`);
-
-    //append elements to body
-    updateDiv.appendChild(titleInput);
-    updateDiv.appendChild(descInput);
-    updateDiv.appendChild(ttmInput);
-    updateDiv.appendChild(tsInput);
-    updateDiv.appendChild(sourceInput);
-    updateDiv.appendChild(sldInput);
-    updateDiv.appendChild(inprogInput);
-    updateDiv.appendChild(compldInput);
-    updateDiv.appendChild(saveBtn);
-
-    body.appendChild(updateDiv);
-
+document.querySelector('#box1').classList.add('blur');
+document.querySelector('#table').classList.add('blur');
+window.scrollTo(0,0);
 }
 
 function updateTopic(id) {
     let title = document.getElementById('uTitle').value;
     let description = document.getElementById('uDescription').value;
     let timetomaster = document.getElementById('uTtm').value;
-        if (!timetomaster) { timetomaster = undefined;}
+    if (!timetomaster) { timetomaster = undefined; }
     let timespent = document.getElementById('uTimespent').value;
-        if (!timespent) { timespent = undefined;}
+    if (!timespent) { timespent = undefined; }
     let source = document.getElementById('uSource').value;
     let startlearningdate = document.getElementById('uSld').value;
-        if (!startlearningdate) { startlearningdate = undefined;}
+    if (!startlearningdate) { startlearningdate = undefined; }
     let inprogress = $('input[type=checkbox]').is(':checked') ? "true" : "false";
     let completiondate = document.getElementById('uCompld').value;
 
-    let updatedTopic = {title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate};
+    let updatedTopic = { title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate };
 
     var settings = {
         "async": true,
@@ -208,10 +193,12 @@ function updateTopic(id) {
         //console.log(updatedTopic);
         listAll();
         document.getElementById('updateForm').remove();
+        document.querySelector('#box1').classList.remove('blur');
+        document.querySelector('#table').classList.remove('blur');
     });
 }
 
-function emptyForm(){
+function emptyForm() {
     document.getElementById('title').value = "";
     document.getElementById('description').value = "";
     document.getElementById('ttm').value = "";
@@ -220,6 +207,12 @@ function emptyForm(){
     document.getElementById('sld').value = "";
     document.getElementById('inprog').value = "";
     document.getElementById('compld').value = "";
+}
+
+function cancel() {
+    document.getElementById('updateForm').remove();
+    document.querySelector('#box1').classList.remove('blur');
+    document.querySelector('#table').classList.remove('blur');
 }
 
 document.getElementById("btn_add").onclick = createTopic;
