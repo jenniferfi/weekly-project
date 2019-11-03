@@ -38,9 +38,11 @@ function listAll() {
                 inprog = 'Completed'
             };
 
-            var options = {day: '2-digit', month:'2-digit', year:'numeric'}
-            let startdate = new Date(t.startlearningdate).toLocaleDateString("fi-FI", options);
-            let compdate = new Date(t.completiondate).toLocaleDateString("fi-FI", options);
+            //var options = {day: '2-digit', month:'2-digit', year:'numeric'}
+            //let startdate = new Date(t.startlearningdate).toLocaleDateString("fi-FI", options);
+            //let compdate = new Date(t.completiondate).toLocaleDateString("fi-FI", options);
+            let startdate = new Date(t.startlearningdate).toISOString().slice(0,10);
+            let compdate = new Date(t.completiondate).toISOString().slice(0,10);
 
             $('#result').append(`<tr>
             <td>${t.title}</td>
@@ -51,8 +53,8 @@ function listAll() {
             <td>${startdate}</td>
             <td>${inprog}</td>
             <td>${compdate}</td>
-            <td><button onclick="remove('${t.id}')">Delete</button>
-            <button onclick="update('${t.id}', '${t.title}','${t.description}', '${t.timetomaster}', '${t.timespent}', '${t.source}', '${t.startlearningdate}', '${t.inprogress}', '${t.completiondate}')">Edit</button></td>
+            <td><button class="fa fa-trash" onclick="remove('${t.id}')"></button>
+            <button class="fa fa-edit" onclick="update('${t.id}', '${t.title}','${t.description}', '${t.timetomaster}', '${t.timespent}', '${t.source}', '${t.startlearningdate}', '${t.inprogress}', '${t.completiondate}')"></button></td>
             </tr>`)
         }
     })
