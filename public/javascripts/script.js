@@ -23,7 +23,7 @@ class Topic {
 
 var arrTopic = [];
 
-//Listaa päivämäärät parempaan muotoon
+//List topics in table
 $(document).ready(listAll)
 function listAll() {
     $.getJSON('/api/topics', function (data) {
@@ -38,15 +38,19 @@ function listAll() {
                 inprog = 'Completed'
             };
 
+            var options = {day: '2-digit', month:'2-digit', year:'numeric'}
+            let startdate = new Date(t.startlearningdate).toLocaleDateString("fi-FI", options);
+            let compdate = new Date(t.completiondate).toLocaleDateString("fi-FI", options);
+
             $('#result').append(`<tr>
             <td>${t.title}</td>
             <td>${t.description}</td>
             <td>${t.timetomaster}</td>
             <td>${t.timespent}</td>
             <td>${t.source}</td>
-            <td>${t.startlearningdate}</td>
+            <td>${startdate}</td>
             <td>${inprog}</td>
-            <td>${t.completiondate}</td>
+            <td>${compdate}</td>
             <td><button onclick="remove('${t.id}')">Delete</button>
             <button onclick="update('${t.id}', '${t.title}','${t.description}', '${t.timetomaster}', '${t.timespent}', '${t.source}', '${t.startlearningdate}', '${t.inprogress}', '${t.completiondate}')">Edit</button></td>
             </tr>`)
@@ -104,7 +108,7 @@ function remove(id) {
     });
 }
 
-//Ei hae päivämääriä, eikä checkboxin value - tee nätimpi
+//Ei hae päivämääriä
 function update(id, title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate) {
 
     //removes form if there already is one
@@ -115,7 +119,9 @@ function update(id, title, description, timetomaster, timespent, source, startle
     //new form
     let inprog ='';
     if (inprogress == 'true') {inprog = 'checked'};
-    //date value muodossa: value="2017-06-01"
+
+    let startdate = new Date(startlearningdate).toISOString().slice(0,10);
+    let compdate = new Date(completiondate).toISOString().slice(0,10);
     
     let body = document.querySelector('body');
     
@@ -144,7 +150,7 @@ function update(id, title, description, timetomaster, timespent, source, startle
     </div>
     <div class="row">
         <div class="col-25"><label for="sld">Start Learning Date: </label></div>
-        <div class="col-75"> <input id="uSld" type="date" name="sld" value="${startlearningdate}" /></div>
+        <div class="col-75"> <input id="uSld" type="date" name="sld" value="${startdate}" /></div>
     </div>
     <div class="row">
         <div class="col-25"><label for="inprog">In Progress:</label></div>
@@ -152,7 +158,7 @@ function update(id, title, description, timetomaster, timespent, source, startle
     </div>
     <div class="row">
         <div class="col-25"><label for="compld">Completion Date </label></div>
-        <div class="col-75"><input id="uCompld" type="date" name="compld" value=${completiondate} /></div>
+        <div class="col-75"><input id="uCompld" type="date" name="compld" value=${compdate} /></div>
     </div>
     <div class="row"><input type="submit" id="btn_save" onclick=updateTopic('${id}') value="Save"><input type="button" id="btn_cancel" onclick=cancel() value="Cancel"></div>
 </div>`)
