@@ -11,6 +11,7 @@ router.route('/')
   .post(function(req, res) {
   topics.createTopic(req, function(results) {
     res.send(results);
+    console.log(req.body);
   });
 });
 

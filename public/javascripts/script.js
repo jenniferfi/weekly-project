@@ -12,12 +12,12 @@ class Topic {
     constructor(title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate) {
         this.title = title;
         this.description = description;
-        this.timetomaster = timetomaster;
-        this.timespent = timespent;
+        this.timetomaster = timetomaster || null;
+        this.timespent = timespent || null;
         this.source = source;
-        this.startlearningdate = startlearningdate;
+        this.startlearningdate = startlearningdate || '1970-01-01';
         this.inprogress = inprogress;
-        this.completiondate = completiondate;
+        this.completiondate = completiondate || '1970-01-01';
     }
 }
 
@@ -38,11 +38,8 @@ function listAll() {
                 inprog = 'Completed'
             };
 
-            //var options = {day: '2-digit', month:'2-digit', year:'numeric'}
-            //let startdate = new Date(t.startlearningdate).toLocaleDateString("fi-FI", options);
-            //let compdate = new Date(t.completiondate).toLocaleDateString("fi-FI", options);
-            let startdate = new Date(t.startlearningdate).toISOString().slice(0,10);
-            let compdate = new Date(t.completiondate).toISOString().slice(0,10);
+            let startdate = new Date(t.startlearningdate).toLocaleDateString("fi-FI");
+            let compdate = new Date(t.completiondate).toLocaleDateString("fi-FI");
 
             $('#result').append(`<tr>
             <td>${t.title}</td>
@@ -61,16 +58,13 @@ function listAll() {
 }
 
 function createTopic() {
-    //MIKSI sldValue ei voi olla tyhjä, mutta compldValue voi olla tyhjä???
+    //MIKSI sldValue ei voi olla tyhjä, mutta compldValue voi olla tyhjä??? STARTDATEISSA ONGELMA: Muuttu -1 kun muokkaa!!
     let titleValue = titleInput.value;
     let descrValue = descrInput.value;
     let ttmValue = ttmInput.value;
-        if (!ttmValue) { ttmValue = undefined; }
     let timesValue = tsInput.value;
-        if (!timesValue) { timesValue = undefined; }
     let sourceValue = srcInput.value;
     let sldValue = sldInput.value;
-        if (!sldValue) { sldValue = undefined; }
     let inprogValue = $('input[type=checkbox]').is(':checked') ? "true" : "false";
     let compldValue = compldInput.value;
 
@@ -110,7 +104,6 @@ function remove(id) {
     });
 }
 
-//Ei hae päivämääriä
 function update(id, title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate) {
 
     //removes form if there already is one
@@ -122,8 +115,9 @@ function update(id, title, description, timetomaster, timespent, source, startle
     let inprog ='';
     if (inprogress == 'true') {inprog = 'checked'};
 
-    let startdate = new Date(startlearningdate).toISOString().slice(0,10);
-    let compdate = new Date(completiondate).toISOString().slice(0,10);
+    options = {year: 'numeric', month:'2-digit', day:'2-digit'}
+    let startdate = new Date(startlearningdate).toLocaleDateString("fi-FI", options).split('.').reverse().join('-');
+    let compdate = new Date(completiondate).toLocaleDateString("fi-FI", options).split('.').reverse().join('-');
     
     let body = document.querySelector('body');
     

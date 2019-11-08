@@ -43,7 +43,7 @@ function deleteTopic(req, callback) {
 }
 
 function createTopic(req, callback) {
-    pool.query('INSERT INTO topic (title, description, timetomaster, timespent, source, startlearningdate, inprogress) values ($1, $2, $3, $4, $5, $6, $7)', [req.body.title, req.body.description, req.body.timetomaster, req.body.timespent, req.body.source, req.body.startlearningdate, req.body.inprogress], (err, results)=> {
+    pool.query('INSERT INTO topic (title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate) values ($1, $2, $3, $4, $5, $6, $7, $8)', [req.body.title, req.body.description, req.body.timetomaster, req.body.timespent, req.body.source, req.body.startlearningdate, req.body.inprogress, req.body.completiondate], (err, results)=> {
         if (err) throw err;
         callback('Topic created!')
     });
