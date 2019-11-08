@@ -58,7 +58,6 @@ function listAll() {
 }
 
 function createTopic() {
-    //MIKSI sldValue ei voi olla tyhjä, mutta compldValue voi olla tyhjä??? STARTDATEISSA ONGELMA: Muuttu -1 kun muokkaa!!
     let titleValue = titleInput.value;
     let descrValue = descrInput.value;
     let ttmValue = ttmInput.value;
@@ -69,8 +68,6 @@ function createTopic() {
     let compldValue = compldInput.value;
 
     var topic = new Topic(titleValue, descrValue, ttmValue, timesValue, sourceValue, sldValue, inprogValue, compldValue);
-
-    //localStorage.setItem(id, [titleValue, descrValue, ttmValue, timesValue, sourceValue, sldValue, inprogValue, compldValue])
 
     arrTopic.push(topic);
 
@@ -93,12 +90,10 @@ function createTopic() {
 }
 
 function remove(id) {
-    //console.log(id);
     $.ajax({
         url: `http://localhost:3000/api/topics/${id}`,
         type: 'DELETE',
         success: function (result) {
-            //console.dir(result);
             listAll();
         }
     });
@@ -192,7 +187,6 @@ function updateTopic(id) {
     }
 
     $.ajax(settings).done(function () {
-        //console.log(updatedTopic);
         listAll();
         document.getElementById('updateForm').remove();
         document.querySelector('#box1').classList.remove('blur');

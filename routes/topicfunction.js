@@ -48,18 +48,6 @@ function createTopic(req, callback) {
         callback('Topic created!')
     });
 };
-/* function createTopic(req, callback){
-    const {title, description, timetomaster, timespent, source, startlearningdate, inprogress} = req.body;
-    console.log(req.body);
-    pool.connect((err, client)=>{
-        if (err) throw err;
-        client.query('INSERT INTO topic (title, description, timetomaster, timespent, source, startlearningdate, inprogress) values ($1, $2, $3, $4, $5, $6, $7)', [title, description, timetomaster, timespent, source, startlearningdate, inprogress], (err, data) => {
-            //if (err) throw err;
-            client.release();
-            callback();
-        })    
-    })
-} */
 
 function updateTopic(req, callback){
     const {title, description, timetomaster, timespent, source, startlearningdate, inprogress} = req.body;
