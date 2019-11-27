@@ -1,7 +1,7 @@
 const Pool = require('pg').Pool;
 const conopts = {
-    user: 'postgres',
-    password: 'Sovelto1',
+    user: '[placeholder]',
+    password: '[placeholder]',
     host: 'localhost',
     database: 'cont_exercise'
 }
@@ -50,12 +50,13 @@ function createTopic(req, callback) {
 };
 
 function updateTopic(req, callback){
-    const {title, description, timetomaster, timespent, source, startlearningdate, inprogress} = req.body;
+    const {title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate} = req.body;
     const id = parseInt(req.params.id);
     pool.connect((err, client) => {
-        client.query('UPDATE topic set title=$1, description=$2, timetomaster=$3, timespent=$4, source=$5, startlearningdate=$6, inprogress=$7 where id=$8', [title, description, timetomaster, timespent, source, startlearningdate, inprogress, id], (err, data) => {
+        client.query('UPDATE topic set title=$1, description=$2, timetomaster=$3, timespent=$4, source=$5, startlearningdate=$6, inprogress=$7, completiondate=$8 where id=$9', [title, description, timetomaster, timespent, source, startlearningdate, inprogress, completiondate, id], (err, data) => {
             client.release();
             callback("Topic updated!");
+            console.log(req.body);
         })
     })
 }
