@@ -74,7 +74,7 @@ function createTopic() {
     var settings = {
         "async": true,
         "crossDomain": true,
-        "url": "http://localhost:3000/api/topics",
+        "url": "/api/topics",
         "method": "POST",
         "headers": {
             "Content-Type": "application/json",
@@ -91,7 +91,7 @@ function createTopic() {
 
 function remove(id) {
     $.ajax({
-        url: `http://localhost:3000/api/topics/${id}`,
+        url: `/api/topics/${id}`,
         type: 'DELETE',
         success: function (result) {
             listAll();
@@ -177,7 +177,7 @@ function updateTopic(id) {
     var settings = {
         "async": true,
         "crossDomain": true,
-        "url": `http://localhost:3000/api/topics/${id}`,
+        "url": `/api/topics/${id}`,
         "method": "PUT",
         "headers": {
             "Content-Type": "application/json",
